@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Karthik K — Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        /* Global Reset & Variables */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --accent-color: #7c5cff;
+            --accent-color-alt: #4ade80;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --card-bg: rgba(15, 23, 42, 0.85);
+            --border-soft: rgba(148, 163, 184, 0.35);
+            --bg-gradient: radial-gradient(circle at top, #1d2345 0, #020617 45%, #000000 100%);
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Floating neon blobs */
+        .bg-blobs { position: fixed; inset: 0; pointer-events: none; z-index: -1; }
+        .blob {
+            position: absolute;
+            width: 420px; height: 420px;
+            border-radius: 50%; filter: blur(80px); opacity: 0.45;
+            mix-blend-mode: screen; animation: floatBlob 18s infinite alternate ease-in-out;
+        }
+        .blob:nth-child(1) { background: #7c5cff; top: -120px; left: -100px; }
+        .blob:nth-child(2) { background: #4ade80; bottom: -140px; right: -60px; animation-delay: 5s; }
+        .blob:nth-child(3) { background: #22d3ee; top: 50%; left: 70%; animation-delay: 10s; }
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -40px) scale(1.1); }
+            100% { transform: translate(-40px, 40px) scale(1.05); }
+        }
+
+        /* Header */
+        header {
+            position: fixed; top: 0; left: 0; right: 0;
+            padding: 12px 60px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000;
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.2));
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+        }
+        header h1 { font-size: 20px; font-weight: 700; color: var(--accent-color); }
+
+        nav { display: flex; gap: 20px; flex-wrap: wrap; }
+        nav a {
+            position: relative; font-size: 14px; font-weight: 600;
+            color: var(--text-muted); text-decoration: none; padding-bottom: 3px;
+            transition: color 0.25s ease;
+        }
+        nav a::after {
+            content: ""; position: absolute; bottom: 0; left: 0;
+            height: 2px; width: 0%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-alt));
+            transition: 0.25s;
+        }
+        nav a:hover, nav a.active { color: #e5e7eb; }
+        nav a:hover::after, nav a.active::after { width: 100%; }
+
+        /* Sections */
+        section { padding: 100px 60px 0; }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh; display: flex; gap: 40px;
+            justify-content: space-between; align-items: center;
+            padding-top: 120px; padding-bottom: 80px;
+        }
+        .hero-text { max-width: 520px; animation: fadeInUp 0.8s ease-out both; }
+        .eyebrow { font-size: 13px; color: var(--accent-color-alt); margin-bottom: 10px; letter-spacing: 0.15em; }
+        .hero-text h1 { font-size: 36px; line-height: 1.25; margin-bottom: 16px; }
+        .hero-text h1 span { color: var(--accent-color); }
+        .hero-text p { font-size: 15px; margin-bottom: 22px; color: var(--text-muted); }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 26px;
+        }
+        .hero-pill {
+            padding: 6px 12px; font-size: 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: rgba(15, 23, 42, 0.85);
+            color: var(--text-muted);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-alt));
+            padding: 12px 24px; border-radius: 999px;
+            text-decoration: none; font-size: 14px; font-weight: 700;
+            color: #0b1120;
+            box-shadow: 0 12px 30px rgba(124, 92, 255, 0.45);
+            transition: 0.25s ease;
+        }
+        .btn:hover { transform: translateY(-2px); opacity: 0.96; }
+
+        .btn-outline {
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            padding: 12px 20px; border-radius: 999px;
+            text-decoration: none; color: var(--text-main);
+            margin-left: 8px;
+        }
+
+        /* Profile image */
+        .hero-image-wrapper { position: relative; }
+        .hero-orbit {
+            position: absolute; inset: -18px;
+            border-radius: 50%; border: 1px dashed rgba(148, 163, 184, 0.45);
+            animation: rotateOrbit 12s linear infinite;
+        }
+        @keyframes rotateOrbit { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+        .hero-image {
+            width: 260px; height: 260px; border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 22px 50px rgba(15, 23, 42, 0.9);
+            background: #000;
+            animation: floatImg 4s ease-in-out infinite alternate;
+        }
+        @keyframes floatImg { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+        .hero-image img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Card style section */
+        .card-section { padding-top: 34px; padding-bottom: 40px; }
+        .card-inner {
+            max-width: 980px; margin: 0 auto 40px;
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 26px 26px 30px;
+            border: 1px solid var(--border-soft);
+            backdrop-filter: blur(20px);
+            opacity: 0; transform: translateY(28px);
+            transition: 0.6s;
+        }
+        .card-inner.visible { opacity: 1; transform: translateY(0); }
+
+        .section-label {
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent-color-alt);
+            margin-bottom: 6px;
+        }
+
+        h2.section-title {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .muted {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* Two-column layout for some sections */
+        .two-col {
+            display: grid;
+            grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+            gap: 24px;
+        }
+
+        /* Lists */
+        .timeline {
+            list-style: none;
+            padding-left: 0;
+        }
+        .timeline li {
+            margin-bottom: 14px;
+        }
+        .timeline-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .timeline-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .pill-list {
+            list-style: none;
+            padding-left: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .pill-list li {
+            font-size: 13px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border-soft);
+        }
+
+        /* Projects grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-top: 12px;
+        }
+        .project-card {
+            border-radius: 14px;
+            border: 1px solid var(--border-soft);
+            padding: 16px 16px 18px;
+            background: rgba(15, 23, 42, 0.95);
+        }
+        .project-card h3 {
+            margin-bottom: 6px;
+            font-size: 16px;
+        }
+        .project-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            font-size: 11px;
+        }
+        .project-tags span {
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: rgba(55, 65, 81, 0.9);
+        }
+
+        /* Certificates & Achievements */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+        .cert-card {
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
+            padding: 14px 16px;
+            background: rgba(15, 23, 42, 0.95);
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 14px;
+        }
+        .cert-card span {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Contact */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+            gap: 24px;
+        }
+        .contact-info p {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .contact-info strong { color: var(--text-main); }
+
+        .contact-form label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-soft);
+            background: rgba(15, 23, 42, 0.9);
+            color: var(--text-main);
+            font-size: 13px;
+        }
+        .contact-form textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        footer {
+            text-align: center; font-size: 12px;
+            color: var(--text-muted); padding: 30px 15px;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+            header { padding: 12px 20px; }
+            section { padding: 100px 20px 0; }
+            .hero { flex-direction: column; text-align: center; }
+            .hero-text { order: 2; }
+            .hero-image-wrapper { order: 1; }
+            .hero-text h1 { font-size: 30px; }
+            .two-col, .contact-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-blobs">
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+</div>
+
+<header>
+    <h1>Karthik K's Portfolio</h1>
+    <nav>
+        <a href="#home" class="active">Home</a>
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#achievements">Achievements</a>
+        <a href="#certificates">Certificates</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<section id="home" class="hero">
+    <div class="hero-text">
+        <div class="eyebrow">WEB DEVELOPER • STUDENT</div>
+        <h1>I'm <span>Karthik K</span><br>and I build clean, modern<br><span>web experiences</span>.</h1>
+        <p>
+            I enjoy turning ideas into fast, responsive and visually appealing websites
+            using HTML, CSS and JavaScript, with a focus on simple and maintainable code.
+        </p>
+
+        <div class="hero-meta">
+            <div class="hero-pill">B.E. Computer Science (Student)</div>
+            <div class="hero-pill">Web Programming Laboratory (22CS505) Mini Project</div>
+            <div class="hero-pill">Frontend-focused &amp; Always Learning</div>
+        </div>
+
+        <a href="resume.pdf" class="btn" download>📄 Download Resume</a>
+        <a href="#contact" class="btn-outline">Contact Me</a>
+    </div>
+
+    <div class="hero-image-wrapper">
+        <div class="hero-orbit"></div>
+        <div class="hero-image">
+            <img src="47bfa493-3693-4e8d-a960-d490811f753c.JPG" alt="Karthik K Profile Photo">
+        </div>
+    </div>
+</section>
+
+<section id="about" class="card-section">
+    <div class="card-inner reveal">
+        <div class="section-label">ABOUT</div>
+        <h2 class="section-title">Who I Am</h2>
+        <p class="muted">
+            I am a web development enthusiast who enjoys converting ideas into real web pages.
+            I like working with clean layouts and writing code that is easy to read and maintain.
+            This personal portfolio website is developed as a mini project for the Web Programming
+            Laboratory course (22CS505), implementing core concepts of HTML, CSS, JavaScript,
+            PHP and MySQL.
+        </p>
+    </div>
+</section>
+
+<section id="education" class="card-section">
+    <div class="card-inner reveal">
+        <div class="section-label">EDUCATION</div>
+        <h2 class="section-title">My Academic Path</h2>
+
+        <div class="two-col">
+            <div>
+                <ul class="timeline">
+                    <li>
+                        <div class="timeline-title">Bachelor of Engineering — Computer Science &amp; Engineering</div>
+                        <div class="timeline-sub">[Your College Name], Karnataka • [Year of Study]</div>
+                        <p class="muted">
+                            Studying core Computer Science subjects including Data Structures,
+                            Object-Oriented Programming, Database Management Systems and Web Programming.
+                        </p>
+                    </li>
+                    <li>
+                        <div class="timeline-title">Web Programming Laboratory (22CS505)</div>
+                        <div class="timeline-sub">Personal Portfolio Website — Mini Project</div>
+                        <p class="muted">
+                            Designed and implemented a full personal portfolio website covering profile,
+                            skills, education, projects, achievements, certifications, resume download
+                            and a working contact form connected to a database.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <p class="muted"><strong>Key coursework:</strong></p>
+                <ul class="pill-list">
+                    <li>Web Programming</li>
+                    <li>Data Structures</li>
+                    <li>OOP in C++ / Java</li>
+                    <li>DBMS</li>
+                    <li>Operating Systems</li>
+                    <li>Computer Networks</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="skills" class="card-section">
+    <div class="card-inner reveal">
+        <div class="section-label">SKILLS</div>
+        <h2 class="section-title">What I Work With</h2>
+        <p class="muted">
+            I focus on frontend development and enjoy building responsive user interfaces,
+            while also having familiarity with basic backend concepts using PHP and MySQL.
+        </p>
+        <ul class="pill-list" style="margin-top:12px;">
+            <li>HTML &amp; CSS</li>
+            <li>JavaScript</li>
+            <li>Responsive Design</li>
+            <li>Git &amp; GitHub</li>
+            <li>Basic C / Java</li>
+            <li>PHP &amp; MySQL (Basics)</li>
+        </ul>
+    </div>
+</section>
+
+<section id="projects" class="card-section">
+    <div class="card-inner reveal">
+        <div class="section-label">PROJECTS</div>
+        <h2 class="section-title">Things I Have Built</h2>
+
+        <div class="projects-grid">
+            <div class="project-card">
+                <h3>Personal Portfolio Website</h3>
+                <p>
+                    A responsive personal portfolio website that showcases my profile, skills,
+                    education, projects, achievements and certificates. It also includes a contact
+                    form that stores messages in a MySQL database using PHP.
+                </p>
+                <div class="project-tags">
+                    <span>HTML</span><span>CSS</span><span>JavaScript</span><span>PHP</span><span>MySQL</span>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3>Mini UI Components (Practice)</h3>
+                <p>
+                    A collection of small practice components such as navigation bars, cards and
+                    forms built to improve my understanding of layout, responsiveness and modern UI design.
+                </p>
+                <div class="project-tags">
+                    <span>Flexbox</span><span>Grid</span><span>Responsive Layouts</span>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3>Simple Form + Database Demo</h3>
+                <p>
+                    A basic web form connected to a MySQL database through PHP, created to
+                    understand server-side form handling, validation and database insertion.
+                </p>
+                <div class="project-tags">
+                    <span>PHP</span><span>MySQL</span><span>Form Handling</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="achievements" class="card-section">
+    <div class="card-inner reveal">
+        <div class="section-label">ACHIEVEMENTS</div>
+        <h2 class="section-title">Highlights</h2>
+
+        <ul class="timeline">
+            <li>
+                <div class="timeline-title">Completed Web Programming Lab Mini Project</div>
+                <div class="timeline-sub">Personal Portfolio Website</div>
+                <p class="muted">
+                    Successfully designed and deployed a full personal portfolio website that
+                    demonstrates end-to-end development from UI design to database-backed contact form.
+                </p>
+            </li>
+            <li>
+                <div class="timeline-title">Continuous Skill Building</div>
+                <div class="timeline-sub">Self-learning &amp; practice</div>
+                <p class="muted">
+                    Regularly practice coding problems, build small UI components and explore new web
+                    technologies to strengthen my fundamentals.
+                </p>
+            </li>
+            <li>
+                <div class="timeline-title">[Add Your Next Achievement]</div>
+                <p class="muted">
+                    You can replace this line with details about hackathons, coding contests,
+                    internship experience or academic awards.
+                </p>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section id="certificates" class="card-section">
+    <div class="card-inner reveal">
+        <div class="section-label">CERTIFICATIONS</div>
+        <h2 class="section-title">Certificates</h2>
+
+        <div class="cert-grid">
+            <a href="assets/certificate/AppuDW.pdf" target="_blank" class="cert-card">
+                Data Mining Certification
+                <span>Overview of data warehousing and data mining concepts.</span>
+            </a>
+
+            <div class="cert-card">
+                Frontend Practice &amp; Online Learning
+                <span>[Add links or names of courses you have completed on HTML, CSS or JavaScript.]</span>
+            </div>
+
+            <div class="cert-card">
+                Future Certifications
+                <span>Space reserved for upcoming certifications in web development or related areas.</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="card-section">
+    <div class="card-inner reveal">
+        <div class="section-label">CONTACT</div>
+        <h2 class="section-title">Get In Touch</h2>
+
+        <div class="contact-grid">
+            <div class="contact-info">
+                <p><strong>Email:</strong> karthik.krishnamurthy.008@gmail.com</p>
+                <p><strong>Phone:</strong> 6360491992</p>
+                <p><strong>Location:</strong> Karnataka, India</p>
+                <p class="muted" style="margin-top:10px;">
+                    You can reach out to me for project collaborations, internship opportunities,
+                    or just to talk about web development and technology.
+                </p>
+            </div>
+
+            <form class="contact-form" action="contact.php" method="POST">
+                <!-- honeypot for bots -->
+                <input type="hidden" name="hp">
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" required>
+
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" required>
+
+                <label for="message">Message</label>
+                <textarea id="message" name="message" required></textarea>
+
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<footer>
+    © 2025 Karthik K. All rights reserved.
+</footer>
+
+<script>
+    /* Reveal animation */
+    const cards = document.querySelectorAll(".reveal");
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add("visible");
+                io.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.2 });
+    cards.forEach(c => io.observe(c));
+
+    /* Active navbar highlight */
+    const sections = document.querySelectorAll("section");
+    const navLinks = document.querySelectorAll("nav a");
+    window.addEventListener("scroll", () => {
+        let y = window.scrollY + 120;
+        sections.forEach(sec => {
+            if (y >= sec.offsetTop && y <= sec.offsetTop + sec.offsetHeight) {
+                navLinks.forEach(a => a.classList.remove("active"));
+                const link = document.querySelector(`nav a[href="#${sec.id}"]`);
+                if (link) link.classList.add("active");
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
