@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="assets/css/style.css">
 
 </head>
@@ -26,13 +27,19 @@
 
 <div class="main-content">
 
+<?php if(isset($_GET['sent']) && $_GET['sent']==1): ?>
+    <div class="msg success">Message Sent Successfully ✔</div>
+<?php elseif(isset($_GET['sent']) && $_GET['sent']==0): ?>
+    <div class="msg error">Failed to Send Message ❌</div>
+<?php endif; ?>
+
 <section id="hero" class="hero">
     <div>
-        <h1>Hello, I'm <span class="accent">Aprameya Hebbar</span></h1>
+        <h1>Hello, I'm <span class="accent">Karthik K</span></h1>
         <p class="tagline">Web Developer</p>
-        <a href="assets/certificate/CV.pdf" download class="btn">Download Resume</a>
+        <a href="assets/certificate/Karthycv.pdf" download class="btn">Download Resume</a>
     </div>
-    <img src="assets/images/profile.jpg" class="hero-img" alt="profile">
+    <img src="assets/images/profile.jpg" class="hero-img">
 </section>
 
 <section id="about" class="section">
@@ -58,9 +65,9 @@
     <h2>Projects</h2>
     <div class="projects-grid">
         <div class="card">
-            <h3>Portfolio Website</h3>
-            <p>A personal portfolio website using HTML, CSS, JS and PHP.</p>
-        </div>
+            <h3>Portfolio website</h3>
+            <p>A personal portfolio website using HTML,CSS,JS and php .</p>
+</div>
     </div>
 </section>
 
@@ -73,15 +80,17 @@
 
 <section id="contact" class="section">
     <h2>Contact</h2>
-    <form class="contact-form">
+    <form action="contact.php" method="POST" class="contact-form">
+        <input type="hidden" name="hp"> <!-- honeypot -->
+
         <label>Name</label>
-        <input type="text" required>
+        <input type="text" name="name" required>
 
         <label>Email</label>
-        <input type="email" required>
+        <input type="email" name="email" required>
 
         <label>Message</label>
-        <textarea required></textarea>
+        <textarea name="message" required></textarea>
 
         <button type="submit" class="btn">Send Message</button>
     </form>
